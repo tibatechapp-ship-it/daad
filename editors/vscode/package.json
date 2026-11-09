@@ -1,0 +1,57 @@
+{
+  "name": "daad-vscode",
+  "displayName": "daad — ضاد: Arabic Python",
+  "description": "تلوين الصياغة والقصاصات البرمجية للغة ضاد (daad): بايثون عربي حتمي — ملفات .daad",
+  "version": "0.1.0",
+  "publisher": "tibatechapp",
+  "license": "Apache-2.0",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "arabic",
+    "ضاد",
+    "daad",
+    "python",
+    "transpiler"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tibatechapp-ship-it/daad.git",
+    "directory": "editors/vscode"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "daad",
+        "aliases": [
+          "daad",
+          "ضاد",
+          "Arabic Python"
+        ],
+        "extensions": [
+          ".daad"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "daad",
+        "scopeName": "source.daad",
+        "path": "./syntaxes/daad.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "daad",
+        "path": "./snippets/daad.json"
+      }
+    ]
+  }
+}

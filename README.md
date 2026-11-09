@@ -30,7 +30,24 @@ daad run examples/fibonacci.daad
 daad transpile examples/hello.daad -    # يطبع Python
 daad check examples/hello.daad          # تحقق فقط
 daad repl                               # جلسة تفاعلية
+zyko py examples/hello.daad --run       # عبر بوابة ZYKO (اختياري)
 ```
+
+## امتداد VS Code
+
+تلوين صياغة كامل و12 قصاصة برمجية للملفات `.daad` — في
+[`editors/vscode/`](editors/vscode/):
+
+```bash
+cd editors/vscode
+npx @vscode/vsce package
+code --install-extension daad-vscode-0.1.0.vsix
+```
+
+القواعد مُتحقق منها بمحرك VS Code الحقيقي (vscode-textmate +
+Oniguruma): 27 كلمة محجوزة، الدوال المدمجة، f-strings، والأرقام
+العربية الشرقية ٠-٩ — كلها مغطاة باختبارات لا تنحرف عن
+`keywords.py` و`PRELUDE`.
 
 ## ما الجديد في 0.2.0
 

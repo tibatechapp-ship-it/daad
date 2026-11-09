@@ -1,0 +1,194 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "daad (Arabic Python)",
+  "scopeName": "source.daad",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#defnames" },
+    { "include": "#classnames" },
+    { "include": "#fstrings" },
+    { "include": "#strings" },
+    { "include": "#constants" },
+    { "include": "#keywords" },
+    { "include": "#builtins" },
+    { "include": "#numbers" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.daad",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "defnames": {
+      "patterns": [
+        {
+          "match": "((?<![\\w\\u0600-\\u06FF])دالة(?![\\w\\u0600-\\u06FF]))\\s+([\\w\\u0600-\\u06FF]+)",
+          "captures": {
+            "1": { "name": "keyword.declaration.function.daad" },
+            "2": { "name": "entity.name.function.daad" }
+          }
+        }
+      ]
+    },
+    "classnames": {
+      "patterns": [
+        {
+          "match": "((?<![\\w\\u0600-\\u06FF])صنف(?![\\w\\u0600-\\u06FF]))\\s+([\\w\\u0600-\\u06FF]+)",
+          "captures": {
+            "1": { "name": "keyword.declaration.class.daad" },
+            "2": { "name": "entity.name.type.daad" }
+          }
+        }
+      ]
+    },
+    "fstrings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.interpolated.daad",
+          "begin": "(?<![\\w\\u0600-\\u06FF])[fF]\"",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.string.begin.daad" }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.daad" }
+          },
+          "patterns": [
+            { "include": "#escapes" },
+            { "include": "#interpolation" }
+          ]
+        },
+        {
+          "name": "string.quoted.single.interpolated.daad",
+          "begin": "(?<![\\w\\u0600-\\u06FF])[fF]'",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.string.begin.daad" }
+          },
+          "end": "'",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.daad" }
+          },
+          "patterns": [
+            { "include": "#escapes" },
+            { "include": "#interpolation" }
+          ]
+        }
+      ]
+    },
+    "interpolation": {
+      "patterns": [
+        {
+          "name": "meta.interpolation.daad",
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.interpolation.begin.daad" }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.interpolation.end.daad" }
+          },
+          "patterns": [
+            { "include": "#constants" },
+            { "include": "#keywords" },
+            { "include": "#builtins" },
+            { "include": "#numbers" },
+            { "include": "#operators" }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.daad",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "include": "#escapes" }
+          ]
+        },
+        {
+          "name": "string.quoted.single.daad",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "include": "#escapes" }
+          ]
+        }
+      ]
+    },
+    "escapes": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.daad",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.daad",
+          "match": "(?<![\\w\\u0600-\\u06FF])(صح|خطأ|عدم)(?![\\w\\u0600-\\u06FF])"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.flow.daad",
+          "match": "(?<![\\w\\u0600-\\u06FF])(وإلا_إذا|وإلا|إذا|لكل|بينما|أعد|اكسر|استمر|مرر|مع|حاول|إلا|أخيراً|ارفع)(?![\\w\\u0600-\\u06FF])"
+        },
+        {
+          "name": "keyword.control.import.daad",
+          "match": "(?<![\\w\\u0600-\\u06FF])(استورد|من|كما)(?![\\w\\u0600-\\u06FF])"
+        },
+        {
+          "name": "keyword.operator.logical.daad",
+          "match": "(?<![\\w\\u0600-\\u06FF])(و|أو|ليس|في|هو)(?![\\w\\u0600-\\u06FF])"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.daad",
+          "match": "(?<![\\w\\u0600-\\u06FF])(اطبع|مدى|طول|نص|عدد|عشري|قائمة|قاموس|مدخل|خروج)(?![\\w\\u0600-\\u06FF])"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.daad",
+          "match": "(?<![\\w\\u0600-\\u06FF])[0-9\\u0660-\\u0669]+(\\.[0-9\\u0660-\\u0669]+)?"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.daad",
+          "match": "==|!=|<=|>=|->|\\*\\*|//|\\+=|-=|\\*=|/=|=|<|>|\\+|-|\\*|/|%|@|&|\\||\\^|~"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.daad",
+          "match": "[:,.]"
+        },
+        {
+          "name": "punctuation.definition.brackets.daad",
+          "match": "[\\(\\)\\[\\]\\{\\}]"
+        }
+      ]
+    }
+  }
+}
