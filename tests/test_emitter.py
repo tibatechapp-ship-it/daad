@@ -20,7 +20,7 @@ def test_emit_call():
 
 
 def test_emit_assign():
-    lines = emit_stmt(ast.Assign("x", ast.Number("5")), 0)
+    lines = emit_stmt(ast.Assign(ast.Name("x"), ast.Number("5")), 0)
     assert lines == ["x = 5"]
 
 

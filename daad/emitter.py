@@ -38,6 +38,20 @@ def emit_block(body: list[ast.Statement], indent: int) -> list[str]:
     return out
 
 
+def _emit_else(orelse: list[ast.Statement], indent: int) -> list[str]:
+    """سلسلة وإلا/وإلا_إذا: elif أصلي في بايثون المولد."""
+    if not orelse:
+        return []
+    pad = "    " * indent
+    if len(orelse) == 1 and isinstance(orelse[0], ast.If):
+        nested = orelse[0]
+        out = [f"{pad}elif {emit_expr(nested.test)}:"]
+        out.extend(emit_block(nested.body, indent + 1))
+        out.extend(_emit_else(nested.orelse, indent))
+        return out
+    return [f"{pad}else:"] + emit_block(orelse, indent + 1)
+
+
 def emit_stmt(stmt: ast.Statement, indent: int) -> list[str]:
     pad = "    " * indent
 
@@ -52,14 +66,7 @@ def emit_stmt(stmt: ast.Statement, indent: int) -> list[str]:
     if isinstance(stmt, ast.If):
         out = [f"{pad}if {emit_expr(stmt.test)}:"]
         out.extend(emit_block(stmt.body, indent + 1))
-        if stmt.orelse:
-            if len(stmt.orelse) == 1 and isinstance(stmt.orelse[0], ast.If):
-                # elif chain: emit as "else:" + nested if
-                out.append(f"{pad}else:")
-                out.extend(emit_stmt(stmt.orelse[0], indent + 1))
-            else:
-                out.append(f"{pad}else:")
-                out.extend(emit_block(stmt.orelse, indent + 1))
+        out.extend(_emit_else(stmt.orelse, indent))
         return out
 
     if isinstance(stmt, ast.For):
@@ -72,10 +79,10 @@ def emit_stmt(stmt: ast.Statement, indent: int) -> list[str]:
         return [f"{pad}return"] if stmt.value is None else [f"{pad}return {emit_expr(stmt.value)}"]
 
     if isinstance(stmt, ast.Assign):
-        return [f"{pad}{stmt.target} = {emit_expr(stmt.value)}"]
+        return [f"{pad}{emit_expr(stmt.target)} = {emit_expr(stmt.value)}"]
 
     if isinstance(stmt, ast.AugAssign):
-        return [f"{pad}{stmt.target} {stmt.op}= {emit_expr(stmt.value)}"]
+        return [f"{pad}{emit_expr(stmt.target)} {stmt.op}= {emit_expr(stmt.value)}"]
 
     if isinstance(stmt, ast.ExprStmt):
         return [f"{pad}{emit_expr(stmt.value)}"]
@@ -104,6 +111,8 @@ def emit_expr(expr: ast.Expression) -> str:
     if isinstance(expr, ast.Number):
         return expr.value
     if isinstance(expr, ast.Str):
+        return expr.value
+    if isinstance(expr, ast.FString):
         return expr.value
     if isinstance(expr, ast.Bool):
         return "True" if expr.value else "False"

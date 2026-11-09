@@ -210,21 +210,25 @@ class Parser:
         return ast.ImportFrom(module, names)
 
     def parse_expr_or_assign(self) -> ast.Statement:
-        # Fast path: simple "name = expr" or "name op= expr"
-        if (self.peek().type == TokenType.IDENT
-                and self.peek(1).type == TokenType.OP
-                and self.peek(1).value in ("=", "+=", "-=", "*=", "/=")):
-            target = self.advance().value
-            op_tok = self.advance()
+        expr = self.parse_expression()
+        tok = self.peek()
+        if tok.type == TokenType.OP and tok.value in ("=", "+=", "-=", "*=", "/="):
+            target = self._assign_target(expr, tok)
+            self.advance()
             value = self.parse_expression()
             self.expect_newline()
-            if op_tok.value == "=":
+            if tok.value == "=":
                 return ast.Assign(target, value)
-            return ast.AugAssign(target, op_tok.value[0], value)
+            return ast.AugAssign(target, tok.value[0], value)
 
-        expr = self.parse_expression()
         self.expect_newline()
         return ast.ExprStmt(expr)
+
+    def _assign_target(self, expr: ast.Expression, tok: Token) -> ast.Expression:
+        """الأهداف الصالحة: اسم، فهرس x[i]، أو خاصية obj.attr."""
+        if isinstance(expr, (ast.Name, ast.Subscript, ast.Attribute)):
+            return expr
+        raise ParseError("هدف إسناد غير صالح", tok.line, tok.col)
 
     def parse_block(self, parent_indent: int) -> list[ast.Statement]:
         self.skip_newlines()
@@ -366,6 +370,10 @@ class Parser:
         if tok.type == TokenType.STRING:
             self.advance()
             return ast.Str(tok.value)
+
+        if tok.type == TokenType.FSTRING:
+            self.advance()
+            return ast.FString(tok.value)
 
         if tok.type == TokenType.KEYWORD:
             if tok.mapped == "True":

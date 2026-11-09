@@ -6,7 +6,7 @@ from .lexer import LexError, Token, TokenType, lex
 from .parser import ParseError, parse
 from .transpile import TranspileError, transpile
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = [
     "lex", "Token", "TokenType", "LexError",
     "parse", "ParseError",

@@ -29,6 +29,10 @@ class Str(Expression):
     value: str  # includes the surrounding quotes
 
 @dataclass
+class FString(Expression):
+    value: str  # includes the f prefix and quotes — passed through to Python
+
+@dataclass
 class Bool(Expression):
     value: bool
 
@@ -116,12 +120,12 @@ class Return(Statement):
 
 @dataclass
 class Assign(Statement):
-    target: str
+    target: Expression  # Name, Subscript, or Attribute
     value: Expression
 
 @dataclass
 class AugAssign(Statement):
-    target: str
+    target: Expression  # Name, Subscript, or Attribute
     op: str  # "+", "-", "*", "/"
     value: Expression
 

@@ -22,6 +22,7 @@ class TokenType(Enum):
     IDENT = "IDENT"
     NUMBER = "NUMBER"
     STRING = "STRING"
+    FSTRING = "FSTRING"
     OP = "OP"
     NEWLINE = "NEWLINE"
     EOF = "EOF"
@@ -92,6 +93,18 @@ def lex(source: str) -> list[Token]:
             m = IDENT_RE.match(line, i)
             if m:
                 word = m.group(0)
+                # f-string: the letter f/F glued to a quote opens a formatted literal,
+                # lexed raw (prefix + quotes included) and passed through to Python.
+                if word in ("f", "F") and i + 1 < n and line[i + 1] in "\"'":
+                    quote = line[i + 1]
+                    j = i + 2
+                    while j < n and line[j] != quote:
+                        j += 2 if line[j] == "\\" else 1
+                    if j >= n:
+                        raise LexError("نص غير مغلق", line_no, i + 1)
+                    tokens.append(Token(TokenType.FSTRING, line[i : j + 1], line_no, i + 1))
+                    i = j + 1
+                    continue
                 if word in KEYWORDS:
                     tokens.append(Token(TokenType.KEYWORD, word, line_no, i + 1, KEYWORDS[word]))
                 else:

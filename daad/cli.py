@@ -16,6 +16,9 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "transpile": return _cmd_transpile(rest)
     if cmd == "run":       return _cmd_run(rest)
     if cmd == "check":     return _cmd_check(rest)
+    if cmd == "repl":
+        from .repl import repl
+        return repl()
     if cmd == "version":
         from . import __version__
         print(f"daad {__version__}"); return 0
@@ -33,6 +36,7 @@ daad — Arabic Python transpiler
   daad transpile FILE.daad -      # يطبع Python على stdout
   daad run FILE.daad              # يحول ثم ينفذ
   daad check FILE.daad            # يتحقق من الصياغة فقط
+  daad repl                       # جلسة تفاعلية (Ctrl-D أو «خروج» للانتهاء)
   daad version                    # يعرض الإصدار
 
 أمثلة:
